@@ -1,0 +1,40 @@
+
+.today_day_name{
+    color:#2a6bf7;
+    font-size: 0.7rem;
+}
+
+.today_date{
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: #fff;
+  background: #2a6bf7;
+  margin-top: 1.3rem;
+  display: flex; /* or inline-flex */
+  align-items: center; 
+}
+
+
+.day_name{
+    color:gray;
+    font-size: 0.7rem;
+    justify-content:center  !important; 
+   
+}
+
+.prev_date{
+  font-size: 1.5rem;
+  color: grey;
+  text-align:center;
+  margin-top: 1.3rem;
+}
+
+.next_date{
+  font-size: 1.5rem;
+  color: black;
+  text-align:center;
+  margin-top: 1.3rem;
+}
