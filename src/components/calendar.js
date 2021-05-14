@@ -4,24 +4,24 @@ import { useSelector, useDispatch } from "react-redux";
 import { day_actions } from "../store/calendar";
 
 //function that returns a week
-Date.prototype.getWeek = function(){
-  return [new Date(this.setDate(this.getDate()-this.getDay()))]
-           .concat(
-             String(Array(6)).split(',')
-                .map ( function(){
-                        return new Date(this.setDate(this.getDate()+1));
-                      }, this )
-           );
- }
+Date.prototype.getWeek = function () {
+  return [new Date(this.setDate(this.getDate() - this.getDay()))].concat(
+    String(Array(6))
+      .split(",")
+      .map(function () {
+        return new Date(this.setDate(this.getDate() + 1));
+      }, this)
+  );
+};
 
- // function which give us the weekly dates with appropiate classes
+// function which give us the weekly dates with appropiate classes
 let get_week_details = (date) => {
   let week = new Date(date).getWeek();
 
   let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   let current_week = [];
 
-  week.map(j => {
+  week.map((j) => {
     //console.log(days[new Date(curr.setDate(i)).getDay()]);
     let day_name = days[new Date(j).getDay()];
     let day = new Date(j);
@@ -46,7 +46,6 @@ let get_week_details = (date) => {
 
   return current_week;
 };
-
 
 let week_arr = [];
 
@@ -75,35 +74,6 @@ const Calendar = () => {
   };
   return (
     <div className="container my-4 ">
-      <div className="row my-4">
-        <div className="col d-flex justify-content-left">
-          <button
-            className="btn btn-primary"
-            onClick={() => handle_prev_week()}
-          >
-            {" "}
-            Prev
-          </button>
-        </div>
-        <div className="col  d-flex justify-content-center">
-          <button
-            className="btn btn-primary"
-            //onClick={() => handle_next_week()}
-          >
-            {" "}
-            ADD TASK +
-          </button>
-        </div>
-        <div className="col  d-flex justify-content-end">
-          <button
-            className="btn btn-primary"
-            onClick={() => handle_next_week()}
-          >
-            {" "}
-            Next
-          </button>
-        </div>
-      </div>
       {show_table && (
         <table className="table table-hover table-bordered">
           <thead>
@@ -151,6 +121,28 @@ const Calendar = () => {
           </tbody>
         </table>
       )}
+
+      <div className="row my-4">
+        <div className="col d-flex justify-content-end">
+          <button
+            className="btn btn-primary"
+            onClick={() => handle_prev_week()}
+          >
+            {" "}
+            Prev
+          </button>
+        </div>
+
+        <div className="col  d-flex justify-content-start">
+          <button
+            className="btn btn-primary"
+            onClick={() => handle_next_week()}
+          >
+            {" "}
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
