@@ -13,12 +13,12 @@ const day_slice = createSlice({
         prev_week(state){
             const today = new Date(state.start_date);
             state.start_date=new Date(today.getFullYear(), today.getMonth(), today.getDate()-7).toISOString();
-            console.log('inside reducer',state.start_date , 'today' , today);
+            //console.log('inside reducer',state.start_date , 'today' , today);
         },
         next_week(state){
             const today =new Date(state.start_date);
             state.start_date=new Date(today.getFullYear(), today.getMonth(), today.getDate()+7).toISOString();
-            console.log('inside reducer',state.start_date , 'today' , today);
+            //console.log('inside reducer',state.start_date , 'today' , today);
         }
     }
 });
