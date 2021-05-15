@@ -16,7 +16,7 @@ Date.prototype.getWeek = function () {
 
 // function which give us the weekly dates with appropiate classes
 let get_week_details = (date) => {
-  let week = new Date(date).getWeek();
+  let week = new Date(new Date(date).toISOString().slice(0,10)).getWeek();
 
   let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   let current_week = [];
