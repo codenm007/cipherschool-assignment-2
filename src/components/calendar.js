@@ -189,7 +189,7 @@ const Calendar = () => {
                                 type="text"
                                 className="form-control"
                                 placeholder="Work To Do"
-                                onChange={event => set_todo_description(event.target.value)}
+                                onChange={(event) => set_todo_description(event.target.value)}
                               />
                               <div className="my-3">
                                 <label className="mx-3">
@@ -234,7 +234,7 @@ const Calendar = () => {
                     todo_print.push(
                       <div id={k.id}
                         className="done_todo"
-                        onClick={(e) => {handle_mark_as_done(e.target.id)}
+                        onClick={() => {handle_mark_as_done(k.id)}
                         }
                       >
                         <p>{k.description}</p>
@@ -246,7 +246,7 @@ const Calendar = () => {
                         {
                           <div className="row justify-content-center px-4">
                             <div className="col-12 col-md-2 ">
-                              <CheckCircle color="green" size="1.4rem" id={k.id} onClick={(e) => {handle_mark_as_done(e.target.id)}}>
+                              <CheckCircle color="green" size="1.4rem" id={k.id} onClick={() => {handle_mark_as_done(k.id)}}>
                                 {" "}
                               </CheckCircle>
                             </div>
@@ -254,7 +254,7 @@ const Calendar = () => {
                               <p>{k.description}</p>
                             </div>
                             <div className="col-12 col-md-3">
-                              <Trash color="red" size="1.4rem" id={k.id} onClick={(e) => {handle_remove_todo(e.target.id)}}>
+                              <Trash color="red" size="1.4rem" id={k.id} onClick={() => {handle_remove_todo(k.id)}}>
                                 {" "}
                               </Trash>
                             </div>
