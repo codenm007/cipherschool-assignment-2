@@ -2,6 +2,7 @@ import "./calendar.css";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { day_actions } from "../store/calendar";
+import {event_actions} from "../store/events";
 import {
   CheckCircle,
   Trash,
@@ -10,6 +11,7 @@ import {
 } from "react-bootstrap-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { v4 as uuidv4 } from 'uuid';
 
 //function that returns a week
 Date.prototype.getWeek = function () {
@@ -75,6 +77,7 @@ const Calendar = () => {
   console.log(event_arr);
   const [show_table, set_show_table] = useState(false);
   const [Todo_date, setTodo_date] = useState(new Date());
+  const [todo_description,set_todo_description] = useState('');
 
   useEffect(() => {
     week_arr = get_week_details(day);
@@ -92,6 +95,31 @@ const Calendar = () => {
     set_show_table(false);
     //console.log(new Date(day), "after coming to component");
   };
+
+  let handle_mark_as_done = (id) => {
+    let index = event_arr.findIndex(obj => obj.id==id);
+    console.log(index,id);
+    dispatch(event_actions.mark_as_done(index));
+    set_show_table(false);
+  }
+
+  let handle_remove_todo = (id) =>{
+    let index = event_arr.findIndex(obj => obj.id==id);
+    console.log(index,id);
+    dispatch(event_actions.remove_event(index));
+    set_show_table(false);
+  }
+
+  let handle_add_todo = () =>{
+    console.log(new Date(Todo_date).toISOString(),todo_description);
+    dispatch(event_actions.add_event({
+      id:uuidv4(),
+      created_at:new Date(Todo_date).toISOString(),
+      description:todo_description,
+      is_completed:false
+    }));
+    set_show_table(false);
+  }
 
   //day_sorter(day);
 
@@ -161,6 +189,7 @@ const Calendar = () => {
                                 type="text"
                                 className="form-control"
                                 placeholder="Work To Do"
+                                onChange={event => set_todo_description(event.target.value)}
                               />
                               <div className="my-3">
                                 <label className="mx-3">
@@ -183,7 +212,7 @@ const Calendar = () => {
                               >
                                 Close
                               </button>
-                              <button type="button" className="btn btn-primary">
+                              <button type="button" data-bs-dismiss="modal" className="btn btn-primary" onClick={() => {handle_add_todo()}}>
                                 Add Task
                               </button>
                             </div>
@@ -198,29 +227,43 @@ const Calendar = () => {
               };
 
               event_arr.map((k) => {
+                //checking if any todo mateches with current dates
                 if (sameDay(new Date(k.created_at), new Date(j.date_ins))) {
-                  //checking if any todo mateches with current dates
-                  todo_print.push(
-                    <td>
-                      {
-                        <div className="row justify-content-center px-4">
-                          <div className="col-12 col-md-2 ">
-                            <CheckCircle color="green" size="1.4rem">
-                              {" "}
-                            </CheckCircle>
+                  //checking if the task is completed or not
+                  if (k.is_completed) {
+                    todo_print.push(
+                      <div id={k.id}
+                        className="done_todo"
+                        onClick={(e) => {handle_mark_as_done(e.target.id)}
+                        }
+                      >
+                        <p>{k.description}</p>
+                      </div>
+                    );
+                  } else {
+                    todo_print.push(
+                      <td>
+                        {
+                          <div className="row justify-content-center px-4">
+                            <div className="col-12 col-md-2 ">
+                              <CheckCircle color="green" size="1.4rem" id={k.id} onClick={(e) => {handle_mark_as_done(e.target.id)}}>
+                                {" "}
+                              </CheckCircle>
+                            </div>
+                            <div className="col-12 col-md-7">
+                              <p>{k.description}</p>
+                            </div>
+                            <div className="col-12 col-md-3">
+                              <Trash color="red" size="1.4rem" id={k.id} onClick={(e) => {handle_remove_todo(e.target.id)}}>
+                                {" "}
+                              </Trash>
+                            </div>
                           </div>
-                          <div className="col-12 col-md-7">
-                            <p>{k.description}</p>
-                          </div>
-                          <div className="col-12 col-md-3">
-                            <Trash color="red" size="1.4rem">
-                              {" "}
-                            </Trash>
-                          </div>
-                        </div>
-                      }
-                    </td>
-                  );
+                        }
+                      </td>
+                    );
+                  }
+
                   count++;
                 } else {
                   todo_print.push(<td>{" sddsds"}</td>);
