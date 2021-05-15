@@ -5,11 +5,16 @@ const initial_day = {
     start_date:new Date().toISOString()
 }
 
+console.log(initial_day);
+
 
 const day_slice = createSlice({
     name:'day',
     initialState:initial_day,
     reducers:{
+        update_date(state,action){
+            state.start_date = action.payload;
+        },
         prev_week(state){
             const today = new Date(state.start_date);
             state.start_date=new Date(today.getFullYear(), today.getMonth(), today.getDate()-7).toISOString();
