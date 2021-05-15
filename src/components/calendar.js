@@ -2,6 +2,9 @@ import "./calendar.css";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { day_actions } from "../store/calendar";
+import { CheckCircle, Trash,SkipBackwardCircle,SkipForwardCircle } from "react-bootstrap-icons";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 //function that returns a week
 Date.prototype.getWeek = function () {
@@ -16,7 +19,7 @@ Date.prototype.getWeek = function () {
 
 // function which give us the weekly dates with appropiate classes
 let get_week_details = (date) => {
-  let week = new Date(new Date(date).toISOString().slice(0,10)).getWeek();
+  let week = new Date(new Date(date).toISOString().slice(0, 10)).getWeek();
 
   let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   let current_week = [];
@@ -54,7 +57,10 @@ let week_arr = [];
 const Calendar = () => {
   const dispatch = useDispatch();
   const day = useSelector((state) => state.day.start_date);
+  const event_arr = useSelector((state) => state.events);
+  console.log(event_arr);
   const [show_table, set_show_table] = useState(false);
+  const [Todo_date, setTodo_date] = useState(new Date());
 
   useEffect(() => {
     week_arr = get_week_details(day);
@@ -102,20 +108,116 @@ const Calendar = () => {
           </thead>
           <tbody>
             <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
+              {/* {event_arr.map(j => {
+                
+                return(
+                  <td>{j}</td>
+                )
+              })} */}
+              <td>
+                <div
+                  className="done_todo"
+                  onClick={() => {
+                    console.log("hello");
+                  }}
+                >
+                  Water plants
+                </div>
+              </td>
+              <td>
+                <div className="row justify-content-center ">
+                  <div className="col-12 col-md-4 ">
+                    <CheckCircle color="green" size="1.4rem">
+                      {" "}
+                    </CheckCircle>
+                  </div>
+                  <div className="col-12 col-md-4 ">
+                    <p>Study AWS</p>
+                  </div>
+                  <div className="col-12 col-md-4 ">
+                    <Trash color="red" size="1.4rem">
+                      {" "}
+                    </Trash>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop"
+                >
+                  Add Item
+                </button>
+
+                <div
+                  className="modal fade"
+                  id="staticBackdrop"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                  tabindex="-1"
+                  aria-labelledby="staticBackdropLabel"
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="staticBackdropLabel">
+                          ADD TASK
+                        </h5>
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                      <label className="form-label">Task Description</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Work To Do"
+                        />
+                        <div className = "my-3">
+                          <label className ="mx-3"> Please select Todo Date: </label>
+                        <DatePicker
+                        selected={Todo_date}
+                        onChange={(date) => setTodo_date(date)}
+                        minDate={new Date()}
+                        showDisabledMonthNavigation
+                      />
+                      </div>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <button type="button" className="btn btn-primary">
+                          Add Task
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>@mdo (sort according to created at )</td>
+              <td>@mdo (sort according to created at )</td>
+              <td>@mdo (sort according to created at )</td>
+              <td></td>
             </tr>
             <tr>
-              <th scope="row">2</th>
               <td>Jacob</td>
               <td>Thornton</td>
               <td>@fat</td>
             </tr>
             <tr>
-              <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
+              <td>Larry the Bird</td>
               <td>@twitter</td>
             </tr>
           </tbody>
@@ -129,7 +231,9 @@ const Calendar = () => {
             onClick={() => handle_prev_week()}
           >
             {" "}
-            Prev
+            
+            <SkipBackwardCircle color="white" size="1.4rem" ></SkipBackwardCircle>
+            
           </button>
         </div>
 
@@ -139,7 +243,9 @@ const Calendar = () => {
             onClick={() => handle_next_week()}
           >
             {" "}
-            Next
+            
+            <SkipForwardCircle color="white" size="1.4rem"></SkipForwardCircle>
+           
           </button>
         </div>
       </div>
