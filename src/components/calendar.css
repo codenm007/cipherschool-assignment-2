@@ -1,23 +1,21 @@
+
 table {
-  width: 100%;
-} 
-thead {
-  border-top: 1.5px solid white;
-  border-right: 1.5px solid white;
-  border-left: 1.5px solid white;
-  /* border-bottom: 1.5px solid black; */
+	display: table;
+  border: 1px solid black;
+  border-collapse: collapse;
 }
-th {
- height: 50px;
- width: 100px;
+table tr {
+	display: table-cell;
+  border: 1px solid black;
+  width: 200px;
+  height: 150px;
 }
-td{
-  height: 50px;
+table tr td {
+	display: block;
+  border: 1px solid black;
+ 
 }
 
-tr{
-  height: 40px;
-}
 
 
 
@@ -35,8 +33,6 @@ tr{
   color: #fff;
   background: #2a6bf7;
   margin-top: 1.3rem;
-  display: flex; /* or inline-flex */
-  align-items: center; 
 }
 
 
@@ -48,14 +44,14 @@ tr{
 }
 
 .prev_date{
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: grey;
   text-align:center;
   margin-top: 1.3rem;
 }
 
 .next_date{
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: black;
   text-align:center;
   margin-top: 1.3rem;
