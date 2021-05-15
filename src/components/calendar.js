@@ -61,6 +61,8 @@ const Calendar = () => {
   console.log(event_arr);
   const [show_table, set_show_table] = useState(false);
   const [Todo_date, setTodo_date] = useState(new Date());
+  let count = 0;
+  let sun = [] , mon = [] , tue = [] , wed = [] ,thu = [] ,fri = [] , sat = [] ;
 
   useEffect(() => {
     week_arr = get_week_details(day);
@@ -78,6 +80,47 @@ const Calendar = () => {
     set_show_table(false);
     //console.log(new Date(day), "after coming to component");
   };
+
+  let day_sorter = (day) => {
+    event_arr.map(j => {
+      let week_days = new Date(day).getWeek();
+      //console.log(week_days[6].toISOString(),count)
+      if(new Date(j.created_at).getDate() === new Date(week_days[0]).getDate()){ //detect event in current weeks sunday
+        sun.push(j);
+        console.log("detected sunday")
+      }
+      if(new Date(j.created_at).getDate() === new Date(week_days[1]).getDate()){ //detect event in current weeks monday
+        mon.push(j);
+        console.log("detected monday")
+      }
+      if(new Date(j.created_at).getDate() === new Date(week_days[2]).getDate()){ //detect event in current weeks tuesday
+        tue.push(j);
+        console.log("detected tue")
+      }
+      if(new Date(j.created_at).getDate() === new Date(week_days[3]).getDate()){ //detect event in current weeks wednesday
+        wed.push(j);
+        console.log("detected wed")
+      }
+      if(new Date(j.created_at).getDate() === new Date(week_days[4]).getDate()){ //detect event in current weeks thurs
+        thu.push(j);
+        console.log("detected thu")
+      }
+      if(new Date(j.created_at).getDate() === new Date(week_days[5]).getDate()){ //detect event in current weeks friday
+        fri.push(j);
+        console.log("detected fri")
+      }
+      if(new Date(j.created_at).getDate() === new Date(week_days[6]).getDate()){ //detect event in current weeks saturday
+        sat.push(j);
+        console.log("detected sat")
+        count++;
+      }
+      console.log(new Date(day).getWeek(),count,"saturday sorted",sat,"sunday_sorted",sun)
+    })
+  }
+
+  
+
+
   return (
     <div className="container my-4 ">
       {show_table && (
@@ -107,13 +150,10 @@ const Calendar = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              {/* {event_arr.map(j => {
-                
-                return(
-                  <td>{j}</td>
-                )
-              })} */}
+            {//calling day sorter
+              day_sorter(day)
+              }
+               <tr>
               <td>
                 <div
                   className="done_todo"
@@ -209,7 +249,7 @@ const Calendar = () => {
               <td>@mdo (sort according to created at )</td>
               <td>@mdo (sort according to created at )</td>
               <td>@mdo (sort according to created at )</td>
-              <td></td>
+              <td>@mdo (sort according to created at )</td>
             </tr>
             <tr>
               <td>Jacob</td>
