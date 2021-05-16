@@ -5,7 +5,7 @@ let prev_todos = JSON.parse(localStorage.getItem("todos"));
 console.log(prev_todos,"prev_todos")
 
 let initial_data = [{
-    id:"asdadsdsa",
+    id:"asda88dsdsa",
     created_at:new Date().toISOString(),
     description:'Demo_Task 1',
     is_completed:false
@@ -14,6 +14,12 @@ let initial_data = [{
     id:"asdasssdsdsa",
     created_at:new Date().toISOString(),
     description:'Demo_Task 2',
+    is_completed:false
+},
+{
+    id:"asdasssdsd333sa",
+    created_at:"2021-05-12T14:03:53.495Z",
+    description:'Demo_Task previous scheduled 2',
     is_completed:false
 }];
 
