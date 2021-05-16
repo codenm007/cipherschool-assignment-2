@@ -37,7 +37,7 @@ const sameDay = (d1, d2) => {
 
 // function which give us the weekly dates with appropiate classes
 let get_week_details = (date) => {
-  let week = new Date(new Date(date).toISOString().slice(0, 10)).getWeek();
+  let week = new Date(new Date(date).toISOString()).getWeek();
 
   let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   let current_week = [];
