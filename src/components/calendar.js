@@ -76,14 +76,14 @@ const Calendar = () => {
   const dispatch = useDispatch();
   const day = useSelector((state) => state.day.start_date);
   const event_arr = useSelector((state) => state.events);
-  console.log(event_arr);
+  //console.log(event_arr);
   const [show_table, set_show_table] = useState(false);
   const [Todo_date, setTodo_date] = useState(new Date());
   const [todo_description,set_todo_description] = useState('');
 
   useEffect(() => {
     week_arr = get_week_details(day);
-    console.log(week_arr, 34, day);
+    //console.log(week_arr, 34, day);
     set_show_table(true);
   }, [show_table]);
 
@@ -100,20 +100,20 @@ const Calendar = () => {
 
   let handle_mark_as_done = (id) => {
     let index = event_arr.findIndex(obj => obj.id==id);
-    console.log(index,id);
+    //console.log(index,id);
     dispatch(event_actions.mark_as_done(index));
     set_show_table(false);
   }
 
   let handle_remove_todo = (id) =>{
     let index = event_arr.findIndex(obj => obj.id==id);
-    console.log(index,id);
+    //console.log(index,id);
     dispatch(event_actions.remove_event(index));
     set_show_table(false);
   }
 
   let handle_add_todo = () =>{
-    console.log(new Date(Todo_date).toISOString(),todo_description);
+    //console.log(new Date(Todo_date).toISOString(),todo_description);
     dispatch(event_actions.add_event({
       id:uuidv4(),
       created_at:new Date(Todo_date).toISOString(),
@@ -134,7 +134,7 @@ const Calendar = () => {
 
           <div className ="row">
             {week_arr.map((j) => {
-              
+
               let day_class_name = "day_name";
 
               let date_class_name = "prev_date";

@@ -5,7 +5,7 @@ const initial_day = {
     start_date:new Date().toISOString()
 }
 
-console.log(initial_day);
+//console.log(initial_day);
 
 
 const day_slice = createSlice({
