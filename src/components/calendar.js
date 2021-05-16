@@ -87,6 +87,8 @@ const Calendar = () => {
     set_show_table(true);
   }, [show_table]);
 
+  let to_print = [];
+
   let handle_prev_week = () => {
     dispatch(day_actions.prev_week());
     set_show_table(false);
@@ -123,6 +125,20 @@ const Calendar = () => {
     set_show_table(false);
   }
 
+  let add_row = () => {
+    var table = document.getElementById("myTable");
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  cell1.innerHTML = "NEW CELL1";
+  cell2.innerHTML = "NEW CELL2";
+  }
+
+  //add_row();
+  let count2 = 0;
+  let count_arr = [];
+  
   //day_sorter(day);
 
   //console.log(sat);
@@ -130,8 +146,8 @@ const Calendar = () => {
   return (
     <div className="container my-4 ">
       {show_table && (
-        <div>
-          <table>
+
+          <div className ="row">
             {week_arr.map((j) => {
               let day_class_name = "day_name";
               let date_class_name = "prev_date";
@@ -144,240 +160,32 @@ const Calendar = () => {
                 date_class_name = "next_date";
               }
 
-              let todo_print = [];
-              const add_a_task = () => {
-                if (j.day_check !== "prev") {
-                  return (
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-warning"
-                        data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"
-                      >
-                        Add Item
-                      </button>
 
-                      <div
-                        className="modal fade"
-                        id="staticBackdrop"
-                        data-bs-backdrop="static"
-                        data-bs-keyboard="false"
-                        tabindex="-1"
-                        aria-labelledby="staticBackdropLabel"
-                        aria-hidden="true"
-                      >
-                        <div className="modal-dialog">
-                          <div className="modal-content">
-                            <div className="modal-header">
-                              <h5
-                                className="modal-title"
-                                id="staticBackdropLabel"
-                              >
-                                ADD TASK
-                              </h5>
-                              <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                              ></button>
-                            </div>
-                            <div className="modal-body">
-                              <label className="form-label">
-                                Task Description
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Work To Do"
-                                onChange={(event) => set_todo_description(event.target.value)}
-                              />
-                              <div className="my-3">
-                                <label className="mx-3">
-                                  {" "}
-                                  Please select Todo Date:{" "}
-                                </label>
-                                <DatePicker
-                                  selected={Todo_date}
-                                  onChange={(date) => setTodo_date(date)}
-                                  minDate={new Date()}
-                                  showDisabledMonthNavigation
-                                />
-                              </div>
-                            </div>
-                            <div className="modal-footer">
-                              <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                Close
-                              </button>
-                              <button type="button" data-bs-dismiss="modal" className="btn btn-primary" onClick={() => {handle_add_todo()}}>
-                                Add Task
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  );
-                } 
-              };
-
-              event_arr.map((k) => {
-                //checking if any todo mateches with current dates
-                if (sameDay(new Date(k.created_at), new Date(j.date_ins))) {
-                  //checking if the task is completed or not
-                  if (k.is_completed) {
-                    todo_print.push(
-                      <div id={k.id}
-                        className="done_todo"
-                        onClick={() => {handle_mark_as_done(k.id)}
-                        }
-                      >
-                        <p>{k.description}</p>
-                      </div>
-                    );
-                  } else {
-                    todo_print.push(
-                      <td>
-                        {
-                          <div className="row justify-content-center px-4">
-                            <div className="col-12 col-md-2 ">
-                              <CheckCircle color="green" size="1.4rem" id={k.id} onClick={() => {handle_mark_as_done(k.id)}}>
-                                {" "}
-                              </CheckCircle>
-                            </div>
-                            <div className="col-12 col-md-7">
-                              <p>{k.description}</p>
-                            </div>
-                            <div className="col-12 col-md-3">
-                              <Trash color="red" size="1.4rem" id={k.id} onClick={() => {handle_remove_todo(k.id)}}>
-                                {" "}
-                              </Trash>
-                            </div>
-                          </div>
-                        }
-                      </td>
-                    );
-                  }
-
-                  count++;
-                }else if (j.day_check !== "prev") {
-                  add_item_counter++;
-                  if(add_item_counter===1){
-                  todo_print.push (
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-warning"
-                        data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"
-                      >
-                        Add Item
-                      </button>
-
-                      <div
-                        className="modal fade"
-                        id="staticBackdrop"
-                        data-bs-backdrop="static"
-                        data-bs-keyboard="false"
-                        tabindex="-1"
-                        aria-labelledby="staticBackdropLabel"
-                        aria-hidden="true"
-                      >
-                        <div className="modal-dialog">
-                          <div className="modal-content">
-                            <div className="modal-header">
-                              <h5
-                                className="modal-title"
-                                id="staticBackdropLabel"
-                              >
-                                ADD TASK
-                              </h5>
-                              <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                              ></button>
-                            </div>
-                            <div className="modal-body">
-                              <label className="form-label">
-                                Task Description
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Work To Do"
-                                onChange={(event) => set_todo_description(event.target.value)}
-                              />
-                              <div className="my-3">
-                                <label className="mx-3">
-                                  {" "}
-                                  Please select Todo Date:{" "}
-                                </label>
-                                <DatePicker
-                                  selected={Todo_date}
-                                  onChange={(date) => setTodo_date(date)}
-                                  minDate={new Date()}
-                                  showDisabledMonthNavigation
-                                />
-                              </div>
-                            </div>
-                            <div className="modal-footer">
-                              <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                Close
-                              </button>
-                              <button type="button" data-bs-dismiss="modal" className="btn btn-primary" onClick={() => {handle_add_todo()}}>
-                                Add Task
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  );
-
-                  }else{
-                    todo_print.push(<td rowSpan = "2"><p>	&nbsp;	&nbsp;</p></td>);
-                  }
-                  
-                  count++;
-                } 
-                else {
-                  todo_print.push(<td rowSpan = "2"><p>	&nbsp;	&nbsp;</p></td>);
-                  count++;
-                }
-              });
-
-              if (todo_print.length === count) {
                 return (
-                  <tr>
-                    <th>
-                      <div className="d-flex justify-content-center">
+                  
+                   
+                      <div className="col">
+                       
                         <div className={day_class_name}> {j.day} </div>
-                        <span className={date_class_name}>{j.date}</span>
+                        <span className={date_class_name}> {j.date}</span>
+                        {event_arr.map(k =>{
+                          if(sameDay(new Date(j.date_ins),new Date(k.created_at))){
+                            return(
+                              <div>{k.description}</div>
+                            )
+                          }
+                        })}
                       </div>
-                    </th>
-                    {todo_print}
-                  </tr>
+                      
                 );
-              }
 
               //console.log(day_to_print,"dty")
             })}
-          </table>
-        </div>
+            </div>
+           
       )}
-
-      <div className="row my-4">
+       
+        <div className="row my-4">
         <div className="col d-flex justify-content-end">
           <button
             className="btn btn-primary"

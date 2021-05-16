@@ -1,15 +1,33 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-
 const initial_event = [{
     id:"asdadsdsa",
     created_at:new Date().toISOString(),
     description:'Demo_Task 1',
     is_completed:false
-},{
-    id:"565656656",
-    created_at:new Date().toISOString(),
-    description:'Demo_Task 2',
+},
+{
+    id:"asdadsdsbjbjbja",
+    created_at:"2021-05-16T10:30:00.000Z",
+    description:'Demo_Task 1',
+    is_completed:false
+},
+{
+    id:"565656",
+    created_at:"2021-05-14T10:30:00.000Z",
+    description:'Demo_14',
+    is_completed:true
+},
+{
+    id:"565656dsd",
+    created_at:"2021-05-18T10:30:00.000Z",
+    description:'Demo_18h',
+    is_completed:true
+},
+{
+    id:"565656dsdvh",
+    created_at:"2021-05-21T10:30:00.000Z",
+    description:'Demo_21h',
     is_completed:true
 }]
 
