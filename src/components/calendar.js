@@ -105,6 +105,7 @@ const Calendar = () => {
     let index = event_arr.findIndex((obj) => obj.id == id);
     //console.log(index,id);
     dispatch(event_actions.mark_as_done(index));
+    cogoToast.info("Yaah ! Task status change successfully !");
     set_show_table(false);
   };
 
@@ -112,6 +113,7 @@ const Calendar = () => {
     let index = event_arr.findIndex((obj) => obj.id == id);
     //console.log(index,id);
     dispatch(event_actions.remove_event(index));
+    cogoToast.warn(" Task removed successfully !");
     set_show_table(false);
   };
 
@@ -126,9 +128,11 @@ const Calendar = () => {
           is_completed: false,
         })
       );
+      cogoToast.success("Yaah ! Task added successfully !");
       set_show_table(false);
+
     } else {
-      cogoToast.error("No task added !");
+      cogoToast.error("No task added due to empty description!");
     }
   };
 
