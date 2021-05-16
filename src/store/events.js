@@ -1,40 +1,37 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const initial_event = [{
+let prev_todos = JSON.parse(localStorage.getItem("todos"));
+
+console.log(prev_todos,"prev_todos")
+
+let initial_data = [{
     id:"asdadsdsa",
     created_at:new Date().toISOString(),
     description:'Demo_Task 1',
     is_completed:false
 },
 {
-    id:"asdadsdsbjbjbja",
-    created_at:"2021-05-16T10:30:00.000Z",
-    description:'Demo_Task 1',
+    id:"asdasssdsdsa",
+    created_at:new Date().toISOString(),
+    description:'Demo_Task 2',
     is_completed:false
-},
-{
-    id:"565656",
-    created_at:"2021-05-14T10:30:00.000Z",
-    description:'Demo_14',
-    is_completed:true
-},
-{
-    id:"565656dsd",
-    created_at:"2021-05-18T10:30:00.000Z",
-    description:'Demo_18h',
-    is_completed:true
-},
-{
-    id:"565656dsdvh",
-    created_at:"2021-05-21T10:30:00.000Z",
-    description:'Demo_21h',
-    is_completed:true
-}]
+}];
+
+let start_event = [];
+
+if(prev_todos){ //cookie present so loading data from it 
+    start_event = prev_todos;
+}
+if(!prev_todos){ // app loads for first time or cookie cleared
+    start_event = initial_data;
+}
+
+
 
 
 const events_slice = createSlice({
     name:'day',
-    initialState:initial_event,
+    initialState:start_event,
     reducers:{
         add_event(state,{payload}){
             state.push(payload);

@@ -2,7 +2,7 @@ import "./calendar.css";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { day_actions } from "../store/calendar";
-import {event_actions} from "../store/events";
+import { event_actions } from "../store/events";
 import {
   CheckCircle,
   Trash,
@@ -11,7 +11,8 @@ import {
 } from "react-bootstrap-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import cogoToast from "cogo-toast";
 
 //function that returns a week
 Date.prototype.getWeek = function () {
@@ -50,7 +51,7 @@ let get_week_details = (date) => {
 
     let day_check = "prev";
     //console.log(time , "time")
-   // console.log("today check",new Date(),day);
+    // console.log("today check",new Date(),day);
     if (sameDay(new Date(), day)) {
       day_check = "today";
     }
@@ -76,10 +77,12 @@ const Calendar = () => {
   const dispatch = useDispatch();
   const day = useSelector((state) => state.day.start_date);
   const event_arr = useSelector((state) => state.events);
+  //saving todos in local storage
+  localStorage.setItem("todos",JSON.stringify(event_arr));
   //console.log(event_arr);
   const [show_table, set_show_table] = useState(false);
   const [Todo_date, setTodo_date] = useState(new Date());
-  const [todo_description,set_todo_description] = useState('');
+  const [todo_description, set_todo_description] = useState("");
 
   useEffect(() => {
     week_arr = get_week_details(day);
@@ -99,31 +102,36 @@ const Calendar = () => {
   };
 
   let handle_mark_as_done = (id) => {
-    let index = event_arr.findIndex(obj => obj.id==id);
+    let index = event_arr.findIndex((obj) => obj.id == id);
     //console.log(index,id);
     dispatch(event_actions.mark_as_done(index));
     set_show_table(false);
-  }
+  };
 
-  let handle_remove_todo = (id) =>{
-    let index = event_arr.findIndex(obj => obj.id==id);
+  let handle_remove_todo = (id) => {
+    let index = event_arr.findIndex((obj) => obj.id == id);
     //console.log(index,id);
     dispatch(event_actions.remove_event(index));
     set_show_table(false);
-  }
+  };
 
-  let handle_add_todo = () =>{
+  let handle_add_todo = () => {
     //console.log(new Date(Todo_date).toISOString(),todo_description);
-    dispatch(event_actions.add_event({
-      id:uuidv4(),
-      created_at:new Date(Todo_date).toISOString(),
-      description:todo_description,
-      is_completed:false
-    }));
-    set_show_table(false);
-  }
+    if (todo_description.length !== 0) {
+      dispatch(
+        event_actions.add_event({
+          id: uuidv4(),
+          created_at: new Date(Todo_date).toISOString(),
+          description: todo_description,
+          is_completed: false,
+        })
+      );
+      set_show_table(false);
+    } else {
+      cogoToast.error("No task added !");
+    }
+  };
 
-  
   //day_sorter(day);
 
   //console.log(sat);
@@ -131,168 +139,222 @@ const Calendar = () => {
   return (
     <div className="container my-4 ">
       {show_table && (
+        <div className="row">
+          {week_arr.map((j) => {
+            let day_class_name = "day_name ml-2";
 
-          <div className ="row">
-            {week_arr.map((j) => {
+            let date_class_name = "prev_date";
 
-              let day_class_name = "day_name";
+            if (j.day_check === "today") {
+              day_class_name = "today_day_name";
+              date_class_name = "today_date";
+            }
+            if (j.day_check === "next") {
+              date_class_name = "next_date";
+            }
+            // function to add a task where needed
+            const add_a_task = () => {
+              if (j.day_check !== "prev") {
+                return (
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-warning"
+                      data-bs-toggle="modal"
+                      style = {{width:"100%"}}
+                      data-bs-target="#staticBackdrop"
+                      onClick={() => set_todo_description("")}
+                    >
+                      Add Item
+                    </button>
 
-              let date_class_name = "prev_date";
-
-              if (j.day_check === "today") {
-                day_class_name = "today_day_name";
-                date_class_name = "today_date";
-              }
-              if (j.day_check === "next") {
-                date_class_name = "next_date";
-              }
-              // function to add a task where needed
-              const add_a_task = () => {
-                if (j.day_check !== "prev") {
-                  return (
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-warning"
-                        data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"
-                      >
-                        Add Item
-                      </button>
-
-                      <div
-                        className="modal fade"
-                        id="staticBackdrop"
-                        data-bs-backdrop="static"
-                        data-bs-keyboard="false"
-                        tabindex="-1"
-                        aria-labelledby="staticBackdropLabel"
-                        aria-hidden="true"
-                      >
-                        <div className="modal-dialog">
-                          <div className="modal-content">
-                            <div className="modal-header">
-                              <h5
-                                className="modal-title"
-                                id="staticBackdropLabel"
-                              >
-                                ADD TASK
-                              </h5>
-                              <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                              ></button>
-                            </div>
-                            <div className="modal-body">
-                              <label className="form-label">
-                                Task Description
+                    <div
+                      className="modal fade"
+                      id="staticBackdrop"
+                      data-bs-backdrop="static"
+                      data-bs-keyboard="false"
+                      tabindex="-1"
+                      aria-labelledby="staticBackdropLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5
+                              className="modal-title"
+                              id="staticBackdropLabel"
+                            >
+                              ADD TASK
+                            </h5>
+                            <button
+                              type="button"
+                              className="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div className="modal-body">
+                            <label className="form-label">
+                              Task Description
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Work To Do"
+                              onChange={(event) =>
+                                set_todo_description(event.target.value)
+                              }
+                            />
+                            <div className="my-3">
+                              <label className="mx-3">
+                                {" "}
+                                Please select Todo Date:{" "}
                               </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Work To Do"
-                                onChange={(event) => set_todo_description(event.target.value)}
+                              <DatePicker
+                                selected={Todo_date}
+                                onChange={(date) => setTodo_date(date)}
+                                minDate={new Date()}
+                                showDisabledMonthNavigation
                               />
-                              <div className="my-3">
-                                <label className="mx-3">
-                                  {" "}
-                                  Please select Todo Date:{" "}
-                                </label>
-                                <DatePicker
-                                  selected={Todo_date}
-                                  onChange={(date) => setTodo_date(date)}
-                                  minDate={new Date()}
-                                  showDisabledMonthNavigation
-                                />
-                              </div>
                             </div>
-                            <div className="modal-footer">
-                              <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                Close
-                              </button>
-                              <button type="button" data-bs-dismiss="modal" className="btn btn-primary" onClick={() => {handle_add_todo()}}>
-                                Add Task
-                              </button>
-                            </div>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                            <button
+                              type="button"
+                              data-bs-dismiss="modal"
+                              className="btn btn-primary"
+                              onClick={() => {
+                                handle_add_todo();
+                              }}
+                            >
+                              Add Task
+                            </button>
                           </div>
                         </div>
                       </div>
-                    </td>
-                  );
-                } 
-              };
-
-
-
-                return (
-                  
-                   
-                      <div className="col">
-                       
-                        <div className={day_class_name}> {j.day} </div>
-                        <span className={date_class_name}> {j.date}</span>
-                        {event_arr.map(k =>{
-                          //checking events that are on the same day 
-                          if(sameDay(new Date(j.date_ins),new Date(k.created_at))){
-                            let arr2 = [];
-
-                            if (k.is_completed) {
-                              arr2.push(
-                                <div id={k.id}
-                                  className="done_todo col-12 col-md-2"
-                                  onClick={() => {handle_mark_as_done(k.id)}
-                                  }
-                                >
-                                  <p>{k.description}</p>
-                                </div>
-                              );
-                            } else {
-                              arr2.push(
-                                <td>
-                                  {
-                                    <div className="row justify-content-center px-4">
-                                      <div className="col-12 col-md-2 ">
-                                        <CheckCircle color="green" size="1.4rem" id={k.id} onClick={() => {handle_mark_as_done(k.id)}}>
-                                          {" "}
-                                        </CheckCircle>
-                                      </div>
-                                      <div className="col-12 col-md-7">
-                                        <p>{k.description}</p>
-                                      </div>
-                                      <div className="col-12 col-md-3">
-                                        <Trash color="red" size="1.4rem" id={k.id} onClick={() => {handle_remove_todo(k.id)}}>
-                                          {" "}
-                                        </Trash>
-                                      </div>
-                                    </div>
-                                  }
-                                </td>
-                              );
-                            }
-                            return (
-                              <div className = "row">
-                                {arr2}
-                              </div>
-                            )
-                          }
-                        })}
-                        {add_a_task()}
-                      </div>
-                      
+                    </div>
+                  </td>
                 );
+              }
+            };
 
-            })}
-            </div>
-           
+            return (
+              <div className="col">
+                <table>
+                  <tr>
+                    <td>
+                      <div className="card border border-primary">
+                        <div className="card-body">
+                          <div
+                            className={day_class_name}
+                            style={{
+                              marginLeft: "50px",
+                              marginBottom: "1rem",
+
+                            }}
+                          >
+                            {" "}
+                            {j.day}{" "}
+                          </div>
+                          <span
+                            className={date_class_name}
+                            style={{ marginLeft: "50px" }}
+                          >
+                            {" "}
+                            {j.date}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                {event_arr.map((k) => {
+                  //checking events that are on the same day
+                  if (sameDay(new Date(j.date_ins), new Date(k.created_at))) {
+                    let arr2 = [];
+
+                    if (k.is_completed) {
+                      arr2.push(
+                        <tr>
+                          <td>
+                            <div className = "card" style = {{backgroundColor:"green"}}  id={k.id}
+                              onClick={() => {
+                                handle_mark_as_done(k.id);
+                              }}>
+                              <div className="card-body">
+                           
+                              <p style={{  overflow: "hidden",textOverflow: "ellipsis", width: "100px" ,color:"white"}}>{k.description}</p>
+                           
+                              </div></div>
+    
+                          </td>
+                        </tr>
+                      );
+                    } else {
+                      arr2.push(
+                        <tr>
+                          <td>
+                            <div className="row justify-content-center my-2">
+                              <div className="card">
+                                <div className="card-body">
+                                <p style={{  overflow: "hidden",textOverflow: "ellipsis", width: "100px" }}>{k.description}</p>
+
+                                  <div className="d-flex justify-content-center row">
+                                    <div className="col-12 col-md-6"  id={k.id} onClick={() => {handle_mark_as_done(k.id);}}>
+                                      <CheckCircle
+                                        color="green"
+                                        size="1.4rem"
+                                      >
+                                        {" "}
+                                      </CheckCircle>
+                                    </div>
+                                    
+                                                                          
+                                    <div 
+                                    id={k.id}
+                                    className="col-12 col-md-6"  
+                                    onClick={() => {
+                                      handle_remove_todo(k.id);
+                                    }}
+                                    >
+                                      <Trash
+                                        color="red"
+                                        size="1.4rem"
+                                      >
+                                        {" "}
+                                      </Trash>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+                    return <table>{arr2}</table>;
+                  }
+                })}
+                <table>
+                  <tr>{add_a_task()}</tr>
+                  <tr>
+                    <td> &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                  </tr>
+                </table>
+              </div>
+            );
+          })}
+        </div>
       )}
-       
-        <div className="row my-4">
+
+      <div className="row ">
         <div className="col d-flex justify-content-end">
           <button
             className="btn btn-primary"
